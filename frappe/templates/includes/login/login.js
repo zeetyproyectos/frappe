@@ -1,10 +1,9 @@
-window.disable_signup = {
-    {
-        disable_signup and "true"
-        or "false"
-    }
-};
+
+window.disable_signup = {{ disable_signup and "true" or "false" }};
+
+
 window.login = {};
+
 login.bind_events = function() {
     $(window).on("hashchange", function() {
         login.route();
