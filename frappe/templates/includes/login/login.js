@@ -236,23 +236,20 @@ input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
         }
 
 function leerUrl(datos){
-// cogemos la parte de la url que hay despues del interrogante
-
-var getString = datos.split('&#39;?')[1];
 
         // obtenemos un array con cada clave=valor
 
-        var GET = getString.split('&#39;&');
+        var param = datos.split('&#39;&');
 
-                var get = {};
+                var getP = {};
                 // recorremos todo el array de valores
 
-                for (var i = 0, l = GET.length; i < l; i++){
+                for (var i = 0, l = param.length; i < l; i++){
 
-        var tmp = GET[i].split('&#39;=');
+        var tmp = param[i].split('&#39;=');
 
-                get[tmp[0]] = unescape(decodeURI(tmp[1]));
+                getP[tmp[0]] = unescape(decodeURI(tmp[1]));
         }
 
-        return get;
+        return getP; 
     }
