@@ -67,8 +67,19 @@ login.login = function() {
 
 login.integracion = function(){
     
+    
+    
+    var rutaSitio = window.location.hash.slice(1);
+        
+    var variables = rutaSitio.split('/');
+    console.log(variables);
+    var formulario = variables[0];
+    console.log(formulario);
+    var parametros = variables[1];
+    console.log(parametros);
     alert("Ingreso a integracion OK");
     return false;
+    
     var rutaVer = window.location.hash;
     var rutaVer2 = window.location.hash.slice(2);
     console.log(rutaVer);
