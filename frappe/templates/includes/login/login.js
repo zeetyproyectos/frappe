@@ -54,14 +54,14 @@ var route = window.location.hash.slice(1);
         console.log(routeLog);
         if (!routeLog){
 routeLog = "login";
-        }
-login[routeLog]();
 }
+login[routeLog]();
+        }
 
 login.login = function() {
 $("form").toggle(false);
         $(".form-login").toggle(true);
-}
+        }
 
 login.integracion = function(){
 
@@ -71,15 +71,11 @@ var rutaSitio = window.location.hash.slice(1);
         var formulario = variables[0];
         console.log(formulario);
         var parametrosUsuario = variables[1];
-        
         var varUs = decode64(parametrosUsuario);
-        console.log(varUs);
-        alert("Ingreso a integracion OK");
-        return false;
-        var rutaVer = window.location.hash;
-        var rutaVer2 = window.location.hash.slice(2);
-        console.log(rutaVer);
-        console.log(rutaVer2);
+        
+        var datos = leerUrl(varUs);
+        
+        console.log(datos);
         event.preventDefault();
         var args = {};
         args.cmd = "login";
@@ -89,20 +85,20 @@ var rutaSitio = window.location.hash.slice(1);
         if (!args.usr || !args.pwd) {
 frappe.msgprint(__("Both login and password required"));
         return false;
-        }
+}
 login.call(args);
         return false;
-}
+        }
 
 login.forgot = function() {
 $("form").toggle(false);
         $(".form-forgot").toggle(true);
-}
+        }
 
 login.signup = function() {
 $("form").toggle(false);
         $(".form-signup").toggle(true);
-}
+        }
 
 
 // Login
@@ -116,47 +112,47 @@ frappe.freeze();
                 statusCode: login.login_handlers
         }).always(function(){
 frappe.unfreeze();
-        });
-}
+});
+        }
 
 login.login_handlers = (function() {
 var get_error_handler = function(default_message) {
 return function(xhr, data) {
 if (xhr.responseJSON) {
 data = xhr.responseJSON;
-        }
+}
 var message = data._server_messages
         ? JSON.parse(data._server_messages).join("\n") : default_message;
         frappe.msgprint(message);
-        };
-        }
+};
+}
 
 var login_handlers = {
 200: function(data) {
 if (data.message == "Logged In") {
 window.location.href = get_url_arg("redirect-to") || "/desk";
-        } else if (data.message == "No App") {
+} else if (data.message == "No App") {
 if (localStorage) {
 var last_visited =
         localStorage.getItem("last_visited")
         || get_url_arg("redirect-to");
         localStorage.removeItem("last_visited");
-        }
+}
 
 if (last_visited && last_visited != "/login") {
 window.location.href = last_visited;
-        } else {
+} else {
 window.location.href = "/me";
-        }
+}
 } else if (["#signup", "#forgot"].indexOf(window.location.hash) !== - 1) {
 frappe.msgprint(data.message);
-        }
+}
 },
         401: get_error_handler(__("Invalid Login")),
         417: get_error_handler(__("Oops! Something went wrong"))
-        };
+};
         return login_handlers;
-})();
+        })();
         frappe.ready(function() {
         login.bind_events();
                 if (!window.location.hash) {
@@ -215,7 +211,7 @@ var output = "";
 alert("There were invalid base64 characters in the input text.\n" +
         "Valid base64 characters are A-Z, a-z, 0-9, '+', '/',and '='\n" +
         "Expect errors in decoding.");
-}
+        }
 input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
         do {
         enc1 = keyStr.indexOf(input.charAt(i++));
@@ -237,4 +233,26 @@ input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
                 enc1 = enc2 = enc3 = enc4 = "";
         } while (i < input.length);
         return unescape(output);
-}
+        }
+
+function leerUrl(datos){
+// cogemos la parte de la url que hay despues del interrogante
+
+var getString = loc.split('&#39;?')[1];
+
+        // obtenemos un array con cada clave=valor
+
+        var GET = getString.split('&#39;&');
+
+                var get = {};
+                // recorremos todo el array de valores
+
+                for (var i = 0, l = GET.length; i < l; i++){
+
+        var tmp = GET[i].split('&#39;=');
+
+                get[tmp[0]] = unescape(decodeURI(tmp[1]));
+        }
+
+        return get;
+    }
