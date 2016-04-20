@@ -238,7 +238,7 @@ input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
 function leerUrl(datos){
 // cogemos la parte de la url que hay despues del interrogante
 
-var getString = loc.split('&#39;?')[1];
+var getString = datos.split('&#39;?')[1];
 
         // obtenemos un array con cada clave=valor
 
