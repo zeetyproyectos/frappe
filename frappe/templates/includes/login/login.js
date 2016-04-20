@@ -13,6 +13,7 @@ login.bind_events = function() {
 		var args = {};
 		args.cmd = "login";
 		args.usr = ($("#login_email").val() || "").trim();
+                alert($("#login_email").val());
 		args.pwd = $("#login_password").val();
 		args.device = "desktop";
 		if(!args.usr || !args.pwd) {
