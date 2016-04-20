@@ -49,6 +49,9 @@ window.disable_signup = {{ disable_signup and "true" or "false" }};
 login.route = function() {
 
 var route = window.location.hash.slice(1);
+
+alert(route);
+
         if (!route) route = "login";
         login[route]();
 }
