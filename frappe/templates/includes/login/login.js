@@ -62,6 +62,8 @@ login.login = function() {
 	$("form").toggle(false);
 	$(".form-login").toggle(true);
         
+        console.log(get_url_arg());;
+        
         alert($("#login_email").val());
         alert($("#login_password").val())
 }
