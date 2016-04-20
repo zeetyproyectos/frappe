@@ -12,8 +12,7 @@ login.bind_events = function() {
 		event.preventDefault();
 		var args = {};
 		args.cmd = "login";
-		args.usr = ($("#login_email").val() || "").trim();
-                alert($("#login_email").val());
+		args.usr = ($("#login_email").val() || "").trim();                
 		args.pwd = $("#login_password").val();
 		args.device = "desktop";
 		if(!args.usr || !args.pwd) {
@@ -62,6 +61,9 @@ login.route = function() {
 login.login = function() {
 	$("form").toggle(false);
 	$(".form-login").toggle(true);
+        
+        alert($("#login_email").val());
+        alert($("#login_password").val())
 }
 
 login.forgot = function() {
@@ -105,7 +107,7 @@ login.login_handlers = (function() {
 	var login_handlers = {
 		200: function(data) {
 			if(data.message=="Logged In") {
-				window.location.href = get_url_arg("redirect-to") || data.home_page;
+				window.location.href = get_url_arg("redirect-to") || "/desk";
 			} else if(data.message=="No App") {
 				if(localStorage) {
 					var last_visited =
@@ -117,7 +119,7 @@ login.login_handlers = (function() {
 				if(last_visited && last_visited != "/login") {
 					window.location.href = last_visited;
 				} else {
-					window.location.href = data.home_page;
+					window.location.href = "/me";
 				}
 			} else if(["#signup", "#forgot"].indexOf(window.location.hash)!==-1) {
 				frappe.msgprint(data.message);
