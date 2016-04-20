@@ -50,7 +50,9 @@ login.route = function() {
 
 var route = window.location.hash.slice(1);
 
-alert(route);
+        alert(route);
+        var result = route.split('/');
+        console.log(result);
 
         if (!route) route = "login";
         login[route]();
