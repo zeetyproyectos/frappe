@@ -113,6 +113,8 @@ frappe.ui.form.Control = Class.extend({
 				value, this.df.fieldtype)) {
 				this.last_value = value;
 			}
+		} else {
+			this.set_input(value);
 		}
 	},
 });
@@ -432,11 +434,30 @@ frappe.ui.form.ControlData = frappe.ui.form.ControlInput.extend({
 				callback("");
 				return;
 			}
-			if(!validate_email(v)) {
-				msgprint(__("Invalid Email: {0}", [v]));
+
+			var email_list = frappe.utils.split_emails(v);
+			if (!email_list) {
+				// invalid email
+				callback("");
+
+			} else {
+				var invalid_email = false;
+				email_list.forEach(function(email) {
+					if (!validate_email(email)) {
+						msgprint(__("Invalid Email: {0}", [email]));
+						invalid_email = true;
+					}
+				});
+
+				if (invalid_email) {
+					// at least 1 invalid email
 					callback("");
-			} else
-				callback(v);
+				} else {
+					// all good
+					callback(v);
+				}
+			}
+
 		} else {
 			callback(v);
 		}
@@ -677,7 +698,7 @@ frappe.ui.form.ControlCheck = frappe.ui.form.ControlData.extend({
 		if (!this.$input) {
 			return;
 		}
-		
+
 		return this.$input.prop("checked") ? 1 : 0;
 	},
 });
@@ -1192,6 +1213,9 @@ frappe.ui.form.ControlLink = frappe.ui.form.ControlData.extend({
 				if(me.frm && me.frm.doc) {
 					me.selected = true;
 					me.parse_validate_and_set_in_model(ui.item.value);
+					setTimeout(function() {
+						me.selected = false;
+					}, 100);
 				} else {
 					me.$input.val(ui.item.value);
 					me.$input.trigger("change");

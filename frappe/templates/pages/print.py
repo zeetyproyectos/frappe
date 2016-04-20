@@ -106,13 +106,16 @@ def get_html(doc, name=None, print_format=None, meta=None,
 	if template == "standard":
 		template = jenv.get_template(standard_format)
 
+	letter_head = frappe._dict(get_letter_head(doc, no_letterhead) or {})
 	args = {
 		"doc": doc,
 		"meta": frappe.get_meta(doc.doctype),
 		"layout": make_layout(doc, meta, format_data),
 		"no_letterhead": no_letterhead,
 		"trigger_print": cint(trigger_print),
-		"letter_head": get_letter_head(doc, no_letterhead)
+		"letter_head": letter_head.content,
+		"footer": letter_head.footer,
+		"print_settings": frappe.get_doc("Print Settings")
 	}
 
 	html = template.render(args, filters={"len": len})
@@ -159,11 +162,11 @@ def validate_print_permission(doc):
 
 def get_letter_head(doc, no_letterhead):
 	if no_letterhead:
-		return ""
+		return {}
 	if doc.get("letter_head"):
-		return frappe.db.get_value("Letter Head", doc.letter_head, "content")
+		return frappe.db.get_value("Letter Head", doc.letter_head, ["content", "footer"], as_dict=True)
 	else:
-		return frappe.db.get_value("Letter Head", {"is_default": 1}, "content") or ""
+		return frappe.db.get_value("Letter Head", {"is_default": 1}, ["content", "footer"], as_dict=True) or {}
 
 def get_print_format(doctype, print_format):
 	if print_format.disabled:
@@ -261,6 +264,9 @@ def is_visible(df, doc):
 	if hasattr(doc, "hide_in_print_layout"):
 		if df.fieldname in doc.hide_in_print_layout:
 			return False
+
+	if df.permlevel > 0 and not doc.has_permlevel_access_to(df.fieldname, df):
+		return False
 
 	return not doc.is_print_hide(df.fieldname, df)
 
