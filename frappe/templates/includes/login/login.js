@@ -54,7 +54,7 @@ login.bind_events = function() {
 
 login.route = function() {
         var rutaVer = window.location.hash;
-        var rutaVer2 = window.location.hash.slice;
+        var rutaVer2 = window.location.hash.slice(2);
     
         console.log(rutaVer);
         console.log(rutaVer2); 
