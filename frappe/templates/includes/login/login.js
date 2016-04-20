@@ -53,6 +53,12 @@ login.bind_events = function() {
 
 
 login.route = function() {
+        var rutaVer = window.location.hash;
+        var rutaVer2 = window.location.hash.slice;
+    
+        console.log(rutaVer);
+        console.log(rutaVer2); 
+    
 	var route = window.location.hash.slice(1);
 	if(!route) route = "login";
 	login[route]();
@@ -62,7 +68,7 @@ login.login = function() {
 	$("form").toggle(false);
 	$(".form-login").toggle(true);
         
-        console.log(get_url_arg());
+        
 }
 
 login.forgot = function() {
