@@ -49,13 +49,15 @@ window.disable_signup = {{ disable_signup and "true" or "false" }};
 login.route = function() {
 
 var route = window.location.hash.slice(1);
-
-        alert(route);
-        var result = route.split('/');
-        console.log(result);
-
-        if (!route) route = "login";
-        login[route]();
+        
+        var routeLogin = route.split('/');
+        
+        routeLog = routeLogin[0];
+        console.log(routeLog);
+        if (!routeLog){
+            routeLog = "login";
+        } 
+        login[routeLog]();
 }
 
 login.login = function() {
