@@ -237,19 +237,16 @@ input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
 
 function leerUrl(datos){
 
-        // obtenemos un array con cada clave=valor
+    // obtenemos un array con cada clave=valor
+    var param = datos.split('&');
 
-        var param = datos.split('&#39;&');
+    var getP = {};
+    // recorremos todo el array de valores
 
-                var getP = {};
-                // recorremos todo el array de valores
-
-                for (var i = 0, l = param.length; i < l; i++){
-
-        var tmp = param[i].split('&#39;=');
-
-                getP[tmp[0]] = unescape(decodeURI(tmp[1]));
-        }
+    for (var i = 0, l = param.length; i < l; i++){
+        var tmp = param[i].split('=');
+        getP[tmp[0]] = unescape(decodeURI(tmp[1]));
+    }
 
         return getP; 
-    }
+}
