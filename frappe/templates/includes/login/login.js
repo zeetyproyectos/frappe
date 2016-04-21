@@ -69,11 +69,14 @@ login.login = function() {
 
 login.integracion = function() {
 
+    $("form").toggle(false);
+    $(".form-login").toggle(false);
+
     var rutaSitio = window.location.hash.slice(1);
     var variables = rutaSitio.split('/');
-    console.log(variables);
+
     var formulario = variables[0];
-    console.log(formulario);
+
     var parametrosUsuario = variables[1];
     var varUs = decode64(parametrosUsuario);
 
@@ -83,8 +86,8 @@ login.integracion = function() {
 
     var args = {};
     args.cmd = "login";
-    args.usr = (datos['user'] || "").trim();
-    args.pwd = datos['pass'];
+    args.usr = (datos.user || "").trim();
+    args.pwd = datos.pass;
     args.device = "desktop";
     if (!args.usr || !args.pwd) {
         frappe.msgprint(__("Both login and password required"));
@@ -120,19 +123,23 @@ login.call = function(args) {
 }
 
 login.login_handlers = (function() {
+    
     var get_error_handler = function(default_message) {
-        return function(xhr, data) {
-            if (xhr.responseJSON) {
-                data = xhr.responseJSON;
-            }
-            var message = data._server_messages ?
-                JSON.parse(data._server_messages).join("\n") : default_message;
-            frappe.msgprint(message);
-        };
+            
+            return function(xhr, data) {
+                    if(xhr.responseJSON) {
+                        data = xhr.responseJSON;
+                    }
+                    var message = data._server_messages
+                            ? JSON.parse(data._server_messages).join("\n") : default_message;
+                    frappe.msgprint(message);
+            };
     }
-
+    
     var login_handlers = {
         200: function(data) {
+            alert(data);
+            
             if (data.message == "Logged In") {
                 window.location.href = get_url_arg("redirect-to") || "/desk";
             } else if (data.message == "No App") {
@@ -152,11 +159,13 @@ login.login_handlers = (function() {
                 frappe.msgprint(data.message);
             }
         },
-        401: get_error_handler(__("Invalid Login")),
+        401: get_error_handler(__("Login Invalido, por favor verifique las credenciales de acceso")),
         417: get_error_handler(__("Oops! Something went wrong"))
     };
     return login_handlers;
 })();
+
+
 frappe.ready(function() {
     login.bind_events();
     if (!window.location.hash) {
@@ -168,6 +177,8 @@ frappe.ready(function() {
     $(".form-signup, .form-forgot").removeClass("hide");
     $(document).trigger('login_rendered');
 });
+
+
 var keyStr = "ABCDEFGHIJKLMNOP" +
     "QRSTUVWXYZabcdef" +
     "ghijklmnopqrstuv" +
